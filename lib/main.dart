@@ -12,11 +12,11 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  runApp(const RecipeApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class RecipeApp extends StatelessWidget {
+  const RecipeApp({super.key});
 
   @override
   Widget build(BuildContext context) {
