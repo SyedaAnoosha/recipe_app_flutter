@@ -42,12 +42,12 @@ class _BottomBarState extends State<BottomBar> {
       backgroundColor: primaryColor,
       body: _pages[selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: primaryColor,
+        backgroundColor: secondaryColor,
         elevation: 0,
         iconSize: screenWidth < 400 ? 24 : 28,
         currentIndex: selectedIndex,
-        selectedItemColor: buttonColor,
-        unselectedItemColor: secondaryColor,
+        selectedItemColor: primaryColor,
+        unselectedItemColor: primaryColor.withOpacity(0.5),
         type: BottomNavigationBarType.fixed,
         selectedLabelStyle: TextStyle(
           fontSize: screenWidth < 400 ? 10 : 14,
