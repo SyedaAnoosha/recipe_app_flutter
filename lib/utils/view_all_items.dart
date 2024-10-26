@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:recipe_app_flutter/screens/recipe_detail_screen.dart';
+import 'package:recipe_app_flutter/utils/commonMethods.dart';
 import 'package:recipe_app_flutter/utils/constants.dart';
 import 'package:recipe_app_flutter/utils/favorite_icon.dart';
 
