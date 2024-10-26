@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:recipe_app_flutter/provider/favorite_provider.dart';
 import 'package:recipe_app_flutter/screens/recipe_detail_screen.dart';
-import 'package:recipe_app_flutter/utils/commonMethods.dart';
+import 'package:recipe_app_flutter/utils/common_methods.dart';
 import 'package:recipe_app_flutter/utils/constants.dart';
 import 'package:recipe_app_flutter/utils/favorite_icon.dart';
 

@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:recipe_app_flutter/utils/commonMethods.dart';
+import 'package:recipe_app_flutter/utils/common_methods.dart';
 import 'package:recipe_app_flutter/utils/constants.dart';
 
 class RecipeDetailScreen extends StatefulWidget {

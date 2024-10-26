@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:recipe_app_flutter/screens/explore_screen.dart';
 import 'package:recipe_app_flutter/screens/recipe_detail_screen.dart';
 import 'package:recipe_app_flutter/screens/search_screen.dart';
-import 'package:recipe_app_flutter/utils/commonMethods.dart';
+import 'package:recipe_app_flutter/utils/common_methods.dart';
 import 'package:recipe_app_flutter/utils/constants.dart';
 
 class MyAppHomeScreen extends StatefulWidget {
@@ -143,7 +143,7 @@ class _MyAppHomeScreenState extends State<MyAppHomeScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (_) => ExploreScreen(),
+                                builder: (_) => const ExploreScreen(),
                               ),
                             );
                           },

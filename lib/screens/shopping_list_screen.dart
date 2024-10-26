@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:recipe_app_flutter/utils/commonMethods.dart';
+import 'package:recipe_app_flutter/utils/common_methods.dart';
 import 'package:recipe_app_flutter/utils/constants.dart';
 
 class ShoppingListScreen extends StatefulWidget {

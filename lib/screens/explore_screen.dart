@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:recipe_app_flutter/utils/view_all_items.dart';
 
 class ExploreScreen extends StatefulWidget {
+  const ExploreScreen({super.key});
+
   @override
   State<ExploreScreen> createState() => _ExploreScreenState();
 }
