@@ -4,6 +4,7 @@ import 'package:recipe_app_flutter/screens/favorite_screen.dart';
 import 'package:recipe_app_flutter/screens/my_app_home_screen.dart';
 import 'package:recipe_app_flutter/screens/profile_screen.dart';
 import 'package:recipe_app_flutter/screens/search_screen.dart';
+import 'package:recipe_app_flutter/screens/shopping_list_screen.dart';
 import 'package:recipe_app_flutter/utils/constants.dart';
 
 class BottomBar extends StatefulWidget {
@@ -29,7 +30,7 @@ class _BottomBarState extends State<BottomBar> {
       const MyAppHomeScreen(),
       const SearchScreen(),
       const FavoriteScreen(),
-      const Center(child: Text('Shopping List')),
+      ShoppingListScreen(userId: userId ?? ''),
       ProfileScreen(userId: userId ?? ''),
     ];
   }
@@ -42,7 +43,7 @@ class _BottomBarState extends State<BottomBar> {
       backgroundColor: primaryColor,
       body: _pages[selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: secondaryColor,
+        backgroundColor: secondaryColor.withOpacity(0.9),
         elevation: 0,
         iconSize: screenWidth < 400 ? 24 : 28,
         currentIndex: selectedIndex,
