@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:recipe_app_flutter/screens/explore_screen.dart';
 import 'package:recipe_app_flutter/screens/recipe_detail_screen.dart';
 import 'package:recipe_app_flutter/screens/search_screen.dart';
+import 'package:recipe_app_flutter/utils/commonMethods.dart';
 import 'package:recipe_app_flutter/utils/constants.dart';
 
 class MyAppHomeScreen extends StatefulWidget {
@@ -82,7 +83,34 @@ class _MyAppHomeScreenState extends State<MyAppHomeScreen> {
                         ),
                       ],
                     ),
-                    SearchBar(),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 22),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const SearchScreen()),
+                          );
+                        },
+                        child: TextField(
+                          enabled: false,
+                          decoration: InputDecoration(
+                            filled: true,
+                            prefixIcon: const Icon(Icons.search),
+                            fillColor: Colors.white70,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            hintText: "Search any recipe",
+                            hintStyle: const TextStyle(
+                              color: secondaryColor,
+                            ),
+                            contentPadding: const EdgeInsets.only(top: 10),
+                          ),
+                        ),
+                      ),
+                    ),
                     const Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -356,36 +384,6 @@ class _MyAppHomeScreenState extends State<MyAppHomeScreen> {
           child: CircularProgressIndicator(),
         );
       },
-    );
-  }
-
-  Padding SearchBar() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 22),
-      child: GestureDetector(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const SearchScreen()),
-          );
-        },
-        child: TextField(
-          enabled: false,
-          decoration: InputDecoration(
-            filled: true,
-            prefixIcon: const Icon(Icons.search),
-            fillColor: Colors.white70,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30),
-            ),
-            hintText: "Search any recipe",
-            hintStyle: const TextStyle(
-              color: secondaryColor,
-            ),
-            contentPadding: const EdgeInsets.only(top: 10),
-          ),
-        ),
-      ),
     );
   }
 }

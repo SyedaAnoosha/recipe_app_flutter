@@ -1,5 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:recipe_app_flutter/utils/commonMethods.dart';
 import 'package:recipe_app_flutter/utils/constants.dart';
 
 class RecipeDetailScreen extends StatefulWidget {
@@ -16,21 +19,32 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
   bool showIngredients = true;
   DocumentSnapshot? recipeData;
   String? image_title;
+  String? userId;
 
   @override
   void initState() {
     super.initState();
     recipeData = widget.documentSnapshot;
     image_title = widget.image;
+    userId = FirebaseAuth.instance.currentUser?.uid;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: bgColor,
       appBar: AppBar(
-        title: Text(recipeData?['title'] ?? '',
-            style: const TextStyle(fontSize: 24, color: primaryColor)),
         backgroundColor: secondaryColor,
+        title: Text(
+          recipeData?['title'] ?? '',
+          style: GoogleFonts.afacad(
+            textStyle: const TextStyle(
+              fontWeight: FontWeight.w400,
+              fontSize: 30,
+              color: primaryColor,
+            ),
+          ),
+        ),
         centerTitle: true,
       ),
       body: recipeData == null
@@ -75,10 +89,10 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        _infoColumn('Servings',
+                        recipeInfo('Servings',
                             recipeData?['servings'].toString() ?? '0'),
-                        _infoColumn('Prep Time', '${recipeData?['time']}m'),
-                        _infoColumn('Level', recipeData?['level'] ?? ''),
+                        recipeInfo('Prep Time', '${recipeData?['time']}m'),
+                        recipeInfo('Level', recipeData?['level'] ?? ''),
                       ],
                     ),
                     const SizedBox(height: 16),
@@ -91,23 +105,28 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        _tabButton('Ingredients', showIngredients),
+                        tabButton('Ingredients', showIngredients),
                         const SizedBox(width: 16),
-                        _tabButton('Directions', !showIngredients),
+                        tabButton('Directions', !showIngredients),
                       ],
                     ),
                     const SizedBox(height: 16),
                     showIngredients
-                        ? _buildIngredientsList(recipeData?['ingredients'])
-                        : _buildInstructionsList(recipeData?['directions']),
+                        ? ingredientsList(recipeData?['ingredients'])
+                        : directionsList(recipeData?['directions']),
                   ],
                 ),
               ),
             ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => addToListDialog(),
+        backgroundColor: secondaryColor,
+        child: const Icon(Icons.add_shopping_cart, color: primaryColor),
+      ),
     );
   }
 
-  Widget _infoColumn(String label, String value) {
+  Widget recipeInfo(String label, String value) {
     return Column(
       children: [
         Text(value,
@@ -121,7 +140,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
     );
   }
 
-  Widget _tabButton(String text, bool isActive) {
+  Widget tabButton(String text, bool isActive) {
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -145,11 +164,10 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
     );
   }
 
-  Widget _buildIngredientsList(List<dynamic>? ingredients) {
+  Widget ingredientsList(List<dynamic>? ingredients) {
     if (ingredients == null) return const SizedBox.shrink();
     return ListView.builder(
       shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
       itemCount: ingredients.length,
       itemBuilder: (context, index) {
         return Padding(
@@ -163,11 +181,10 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
     );
   }
 
-  Widget _buildInstructionsList(List<dynamic>? instructions) {
+  Widget directionsList(List<dynamic>? instructions) {
     if (instructions == null) return const SizedBox.shrink();
     return ListView.builder(
       shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
       itemCount: instructions.length,
       itemBuilder: (context, index) {
         return Padding(
@@ -186,6 +203,54 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
               ),
             ],
           ),
+        );
+      },
+    );
+  }
+
+  void addToListDialog() {
+    TextEditingController itemController = TextEditingController();
+    TextEditingController quantityController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Add to Shopping List"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: itemController,
+                decoration: const InputDecoration(labelText: "Item Name"),
+              ),
+              TextField(
+                controller: quantityController,
+                decoration: const InputDecoration(labelText: "Quantity"),
+                keyboardType: TextInputType.number,
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Cancel"),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                final itemName = itemController.text.isNotEmpty
+                    ? itemController.text
+                    : recipeData?['title'];
+                final quantity = quantityController.text;
+
+                if (userId != null && itemName != null && quantity.isNotEmpty) {
+                  addToShoppingList(itemName, quantity, userId!);
+                  Navigator.pop(context);
+                }
+              },
+              child: const Text("Add"),
+            ),
+          ],
         );
       },
     );
