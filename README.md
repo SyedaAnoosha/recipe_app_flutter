@@ -1,16 +1,24 @@
-# recipe_app_flutter
+# Recipe App
 
-A new Flutter project.
+A recipe application that allows users to browse, search, and save their favorite recipes. Built using Flutter with Firebase integration for authentication, data storage, and file management.
 
-## Getting Started
+## Features
 
-This project is a starting point for a Flutter application.
+- **User Authentication**: Users can sign up, log in, and log out securely using Firebase Authentication.
+- **Profile Management**: Users can view and edit their profile, including updating their profile picture.
+- **Recipe Browsing**: Explore recipes by categories, search by ingredients, and view detailed recipe information.
+- **Favorites**: Users can add and remove recipes from their favorites.
+- **Responsive Design**: The app adapts for use on mobile, tablet, and desktop screens.
+<!-- - **Cooking Tips & Tricks**: Provides helpful cooking tips to enhance the user experience. -->
 
-A few resources to get you started if this is your first Flutter project:
+## Tech Stack
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- **Flutter**: Cross-platform mobile application framework
+- **Firebase**:
+  - **Authentication** for user login and registration
+  - **Firestore** for storing user and recipe data
+  <!-- - **Storage** for managing images and files -->
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Clone this repository
+   ```bash
+   git clone https://github.com/SyedaAnoosha/recipe-app-flutter.git
