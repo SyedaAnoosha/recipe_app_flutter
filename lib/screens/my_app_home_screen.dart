@@ -30,10 +30,9 @@ class _MyAppHomeScreenState extends State<MyAppHomeScreen> {
       .collection('recipes')
       .where('featured', isEqualTo: true);
 
-  Query get recentlyViewedRecipes => FirebaseFirestore.instance
-      .collection('recently_viewed')
-      .orderBy('timestamp', descending: true)
-      .limit(5);
+  Query get recommendedRecipes => FirebaseFirestore.instance
+      .collection('recipes')
+      .where('recommended', isEqualTo: true);
 
   @override
   Widget build(BuildContext context) {
@@ -108,6 +107,7 @@ class _MyAppHomeScreenState extends State<MyAppHomeScreen> {
                             fontSize: 20,
                             letterSpacing: 0.1,
                             fontWeight: FontWeight.bold,
+                            color: secondaryColor,
                           ),
                         ),
                         TextButton(
@@ -155,6 +155,7 @@ class _MyAppHomeScreenState extends State<MyAppHomeScreen> {
                     fontSize: 20,
                     letterSpacing: 0.1,
                     fontWeight: FontWeight.bold,
+                    color: secondaryColor,
                   ),
                 ),
               ),
@@ -172,30 +173,31 @@ class _MyAppHomeScreenState extends State<MyAppHomeScreen> {
                 },
               ),
               const SizedBox(height: 20),
-              // const Padding(
-              //   padding: EdgeInsets.only(left: 10),
-              //   child: Text(
-              //     "Recently Viewed",
-              //     style: TextStyle(
-              //       fontSize: 20,
-              //       letterSpacing: 0.1,
-              //       fontWeight: FontWeight.bold,
-              //     ),
-              //   ),
-              // ),
-              // StreamBuilder(
-              //   stream: recentlyViewedRecipes.snapshots(),
-              //   builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-              //     if (!snapshot.hasData) {
-              //       return const Center(child: CircularProgressIndicator());
-              //     }
-              //     final recentlyViewed = snapshot.data?.docs ?? [];
-              //     return Padding(
-              //       padding: const EdgeInsets.only(top: 5, left: 15),
-              //       child: _buildHorizontalRecipeList(recentlyViewed),
-              //     );
-              //   },
-              // ),
+              const Padding(
+                padding: EdgeInsets.only(left: 10),
+                child: Text(
+                  "Recommeded For You",
+                  style: TextStyle(
+                    fontSize: 20,
+                    letterSpacing: 0.1,
+                    fontWeight: FontWeight.bold,
+                    color: secondaryColor,
+                  ),
+                ),
+              ),
+              StreamBuilder(
+                stream: recommendedRecipes.snapshots(),
+                builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (!snapshot.hasData) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  final recommended = snapshot.data?.docs ?? [];
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 5, left: 15),
+                    child: _buildHorizontalRecipeList(recommended),
+                  );
+                },
+              ),
               const SizedBox(height: 20),
             ],
           ),
@@ -242,7 +244,7 @@ class _MyAppHomeScreenState extends State<MyAppHomeScreen> {
                           topLeft: Radius.circular(20),
                           topRight: Radius.circular(20)),
                       image: DecorationImage(
-                        image: AssetImage(image!), // Adjust image logic
+                        image: AssetImage(image!),
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -271,6 +273,21 @@ class _MyAppHomeScreenState extends State<MyAppHomeScreen> {
                         const SizedBox(width: 4),
                         Text(
                           "${recipe['servings']} Servings",
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
+                            color: secondaryColor,
+                          ),
+                        ),
+                        const SizedBox(width: 4),
+                        const Icon(
+                          Icons.timer,
+                          size: 16,
+                          color: secondaryColor,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          "${recipe['time']} Min",
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 15,
