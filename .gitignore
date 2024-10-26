@@ -42,5 +42,6 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
+# ignored due to security concerns
 firebase.json
 lib/firebase_options.dart
