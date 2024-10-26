@@ -205,7 +205,7 @@ class UserInfoTile extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
             decoration: BoxDecoration(
-              color: valueBackground ?? Colors.grey[200],
+              color: primaryColor,
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(
