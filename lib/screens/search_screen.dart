@@ -219,7 +219,7 @@ class _SearchScreenState extends State<SearchScreen> {
                               ),
                             );
                           },
-                          trailing: FavoriteIcon(documentSnapshot: recipe),
+                          trailing: FavoriteIcon(recipe: recipe),
                         ),
                       );
                     },

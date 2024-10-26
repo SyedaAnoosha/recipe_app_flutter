@@ -1,66 +1,51 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FavoriteProvider extends ChangeNotifier {
-  List<String> _favoriteIds = [];
+  final String userId;
+  final CollectionReference _userCollection =
+      FirebaseFirestore.instance.collection('users');
+  List<String> _favorites = [];
 
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  List<String> get favorites => _favoriteIds;
-
-  FavoriteProvider() {
-    loadFavorites();
+  FavoriteProvider({required this.userId}) {
+    _loadFavorites();
   }
 
-  void toggleFavorite(DocumentSnapshot product) async {
-    String productId = product.id;
-    if (_favoriteIds.contains(productId)) {
-      _favoriteIds.remove(productId);
-      await _removeFavorite(productId);
-    } else {
-      _favoriteIds.add(productId);
-      await _addFavorite(productId);
-    }
-    notifyListeners();
-  }
+  List<String> get favorites => _favorites;
 
-  bool isExist(DocumentSnapshot product) {
-    return _favoriteIds.contains(product.id);
-  }
-
-  Future<void> _addFavorite(String productId) async {
-    try {
-      await _firestore.collection("userFavorite").doc(productId).set({
-        'isFavorite': true,
-      });
-    } catch (e) {
-      print(e.toString());
+  Future<void> _loadFavorites() async {
+    DocumentSnapshot userDoc = await _userCollection.doc(userId).get();
+    if (userDoc.exists) {
+      final data = userDoc.data() as Map<String, dynamic>;
+      _favorites = List<String>.from(data['favorites'] ?? []);
+      notifyListeners();
     }
   }
 
-  Future<void> _removeFavorite(String productId) async {
-    try {
-      await _firestore.collection("userFavorite").doc(productId).delete();
-    } catch (e) {
-      print(e.toString());
+  Future<void> addFavorite(String recipeId) async {
+    if (!_favorites.contains(recipeId)) {
+      _favorites.add(recipeId);
+      await _updateFavoritesInFirestore();
+      notifyListeners();
     }
   }
 
-  Future<void> loadFavorites() async {
-    try {
-      QuerySnapshot snapshot =
-          await _firestore.collection("userFavorite").get();
-      _favoriteIds = snapshot.docs.map((doc) => doc.id).toList();
-    } catch (e) {
-      print(e.toString());
+  Future<void> removeFavorite(String recipeId) async {
+    if (_favorites.contains(recipeId)) {
+      _favorites.remove(recipeId);
+      await _updateFavoritesInFirestore();
+      notifyListeners();
     }
-    notifyListeners();
   }
 
-  static FavoriteProvider of(BuildContext context, {bool listen = true}) {
-    return Provider.of<FavoriteProvider>(
-      context,
-      listen: listen,
+  Future<void> _updateFavoritesInFirestore() async {
+    await _userCollection.doc(userId).set(
+      {'favorites': _favorites},
+      SetOptions(merge: true),
     );
+  }
+
+  bool isFavorite(String recipeId) {
+    return _favorites.contains(recipeId);
   }
 }

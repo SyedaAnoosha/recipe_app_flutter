@@ -79,8 +79,7 @@ SingleChildScrollView items_list_view() {
                           ),
                         ],
                       ),
-                      trailing:
-                          FavoriteIcon(documentSnapshot: documentSnapshot),
+                      trailing: FavoriteIcon(recipe: documentSnapshot),
                       onTap: () {
                         Navigator.push(
                           context,

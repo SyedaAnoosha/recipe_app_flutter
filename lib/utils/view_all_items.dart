@@ -27,18 +27,15 @@ class _ViewAllItemsState extends State<ViewAllItems> {
           ),
         ),
         centerTitle: true,
-        actions: [
-          const SizedBox(width: 15),
-          IconButton(
-            icon: const Icon(
-              Icons.arrow_back,
-              color: primaryColor,
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-            },
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back,
+            color: primaryColor,
           ),
-        ],
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: items_list_view(),
     );

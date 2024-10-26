@@ -1,10 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:recipe_app_flutter/provider/favorite_provider.dart';
 import 'package:recipe_app_flutter/screens/recipe_detail_screen.dart';
 import 'package:recipe_app_flutter/utils/constants.dart';
 import 'package:recipe_app_flutter/utils/favorite_icon.dart';
-import 'package:recipe_app_flutter/provider/favorite_provider.dart';
 
 class FavoriteScreen extends StatefulWidget {
   const FavoriteScreen({super.key});
@@ -16,8 +17,8 @@ class FavoriteScreen extends StatefulWidget {
 class _FavoriteScreenState extends State<FavoriteScreen> {
   @override
   Widget build(BuildContext context) {
-    final provider = FavoriteProvider.of(context);
-    final favoriteItems = provider.favorites;
+    final favoriteProvider = Provider.of<FavoriteProvider>(context);
+    final favoriteItems = favoriteProvider.favorites;
 
     return Scaffold(
       backgroundColor: bgColor,
@@ -27,7 +28,10 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
           'My Favorites',
           style: GoogleFonts.afacad(
             textStyle: const TextStyle(
-                fontWeight: FontWeight.w400, fontSize: 30, color: primaryColor),
+              fontWeight: FontWeight.w400,
+              fontSize: 30,
+              color: primaryColor,
+            ),
           ),
         ),
         centerTitle: true,
@@ -45,28 +49,22 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
           : ListView.builder(
               itemCount: favoriteItems.length,
               itemBuilder: (context, index) {
-                String favorite = favoriteItems[index];
+                String recipeId = favoriteItems[index];
                 return FutureBuilder<DocumentSnapshot>(
                   future: FirebaseFirestore.instance
                       .collection("recipes")
-                      .doc(favorite)
+                      .doc(recipeId)
                       .get(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
+                      return const Center(child: CircularProgressIndicator());
                     }
 
-                    if (snapshot.hasError) {
+                    if (snapshot.hasError ||
+                        !snapshot.hasData ||
+                        !snapshot.data!.exists) {
                       return const Center(
                         child: Text("Error loading favorite"),
-                      );
-                    }
-
-                    if (!snapshot.hasData || !snapshot.data!.exists) {
-                      return const Center(
-                        child: Text("Recipe not found"),
                       );
                     }
 
@@ -126,14 +124,15 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                           ),
                         ],
                       ),
-                      trailing: FavoriteIcon(documentSnapshot: favoriteItem),
+                      trailing: FavoriteIcon(recipe: favoriteItem),
                       onTap: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => RecipeDetailScreen(
-                                documentSnapshot: favoriteItem,
-                                image: image ?? 'my_logo.png'),
+                              documentSnapshot: favoriteItem,
+                              image: image ?? 'assets/my_logo.png',
+                            ),
                           ),
                         );
                       },
