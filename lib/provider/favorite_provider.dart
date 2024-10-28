@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FavoriteProvider extends ChangeNotifier {
   final String userId;
-  final CollectionReference _userCollection =
+  final CollectionReference userCollection =
       FirebaseFirestore.instance.collection('users');
   List<String> _favorites = [];
 
@@ -14,7 +14,7 @@ class FavoriteProvider extends ChangeNotifier {
   List<String> get favorites => _favorites;
 
   Future<void> _loadFavorites() async {
-    DocumentSnapshot userDoc = await _userCollection.doc(userId).get();
+    DocumentSnapshot userDoc = await userCollection.doc(userId).get();
     if (userDoc.exists) {
       final data = userDoc.data() as Map<String, dynamic>;
       _favorites = List<String>.from(data['favorites'] ?? []);
@@ -25,7 +25,7 @@ class FavoriteProvider extends ChangeNotifier {
   Future<void> addFavorite(String recipeId) async {
     if (!_favorites.contains(recipeId)) {
       _favorites.add(recipeId);
-      await _updateFavoritesInFirestore();
+      await updateFavoritesInFirestore();
       notifyListeners();
     }
   }
@@ -33,15 +33,14 @@ class FavoriteProvider extends ChangeNotifier {
   Future<void> removeFavorite(String recipeId) async {
     if (_favorites.contains(recipeId)) {
       _favorites.remove(recipeId);
-      await _updateFavoritesInFirestore();
+      await updateFavoritesInFirestore();
       notifyListeners();
     }
   }
 
-  Future<void> _updateFavoritesInFirestore() async {
-    await _userCollection.doc(userId).set(
+  Future<void> updateFavoritesInFirestore() async {
+    await userCollection.doc(userId).update(
       {'favorites': _favorites},
-      SetOptions(merge: true),
     );
   }
 
