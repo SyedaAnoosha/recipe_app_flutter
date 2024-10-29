@@ -21,7 +21,8 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
     final favoriteProvider = Provider.of<FavoriteProvider>(context);
     final favoriteItems = favoriteProvider.favorites;
 
-    return Scaffold(
+    return SafeArea(
+        child: Scaffold(
       backgroundColor: bgColor,
       appBar: AppBar(
         backgroundColor: secondaryColor,
@@ -142,6 +143,6 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                 );
               },
             ),
-    );
+    ));
   }
 }

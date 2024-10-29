@@ -48,73 +48,75 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
         centerTitle: true,
       ),
       body: recipeData == null
-          ? const Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      height: MediaQuery.of(context).size.height / 2.1,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          fit: BoxFit.cover,
-                          image: AssetImage(image_title ?? ''),
+          ? const SafeArea(child: Center(child: CircularProgressIndicator()))
+          : SafeArea(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        height: MediaQuery.of(context).size.height / 2.1,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image: AssetImage(image_title ?? ''),
+                          ),
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      (recipeData?['category'] != null &&
-                              recipeData!['category'].length > 1)
-                          ? recipeData!['category'].join(", ")
-                          : recipeData?['category'][0] ?? 'Uncategorized',
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: secondaryColor,
+                      const SizedBox(height: 16),
+                      Text(
+                        (recipeData?['category'] != null &&
+                                recipeData!['category'].length > 1)
+                            ? recipeData!['category'].join(", ")
+                            : recipeData?['category'][0] ?? 'Uncategorized',
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: secondaryColor,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      recipeData?['title'] ?? '',
-                      style: const TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
-                        color: titleColor,
+                      const SizedBox(height: 8),
+                      Text(
+                        recipeData?['title'] ?? '',
+                        style: const TextStyle(
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold,
+                          color: titleColor,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 8),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        recipeInfo('Servings',
-                            recipeData?['servings'].toString() ?? '0'),
-                        recipeInfo('Prep Time', '${recipeData?['time']}m'),
-                        recipeInfo('Level', recipeData?['level'] ?? ''),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      recipeData?['description'] ?? '',
-                      style:
-                          const TextStyle(fontSize: 18, color: Colors.black54),
-                    ),
-                    const SizedBox(height: 16),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        tabButton('Ingredients', showIngredients),
-                        const SizedBox(width: 16),
-                        tabButton('Directions', !showIngredients),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    showIngredients
-                        ? ingredientsList(recipeData?['ingredients'])
-                        : directionsList(recipeData?['directions']),
-                  ],
+                      const SizedBox(height: 8),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          recipeInfo('Servings',
+                              recipeData?['servings'].toString() ?? '0'),
+                          recipeInfo('Prep Time', '${recipeData?['time']}m'),
+                          recipeInfo('Level', recipeData?['level'] ?? ''),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        recipeData?['description'] ?? '',
+                        style: const TextStyle(
+                            fontSize: 18, color: Colors.black54),
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          tabButton('Ingredients', showIngredients),
+                          const SizedBox(width: 16),
+                          tabButton('Directions', !showIngredients),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      showIngredients
+                          ? ingredientsList(recipeData?['ingredients'])
+                          : directionsList(recipeData?['directions']),
+                    ],
+                  ),
                 ),
               ),
             ),

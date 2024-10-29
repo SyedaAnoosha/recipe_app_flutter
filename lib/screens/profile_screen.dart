@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -18,28 +19,45 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   String imageUrl = '';
+  XFile? image;
 
-  Future<void> _pickImage() async {
-    ImagePicker imagePicker = ImagePicker();
-    XFile? file = await imagePicker.pickImage(source: ImageSource.camera);
-    print('${file?.path}');
-    if (file == null) return;
-    Reference referenceRoot = FirebaseStorage.instance.ref();
-    Reference referenceDirImages = referenceRoot.child('images');
-    Reference referenceImageToUpload = referenceDirImages.child('profile_pics');
-    try {
-      await referenceImageToUpload.putFile(File(file.path));
-      imageUrl = referenceImageToUpload.getDownloadURL().toString();
-    } catch (error) {
-      print('Error uploading image: $error');
-    }
-    try {
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(widget.userId)
-          .update({'profilePicture': imageUrl});
-    } catch (error) {
-      print('Error uploading profile picture: $error');
+  Future<void> pickImage() async {
+    final pickedImage =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+
+    image = pickedImage;
+
+    if (pickedImage != null) {
+      Uint8List? imageData;
+
+      if (kIsWeb) {
+        imageData = await pickedImage.readAsBytes();
+      } else {
+        final file = File(pickedImage.path);
+        imageData = await file.readAsBytes();
+      }
+
+      final ref = FirebaseStorage.instance
+          .ref()
+          .child('profile_pics')
+          .child('${widget.userId}.jpg');
+
+      try {
+        await ref.putData(imageData);
+
+        imageUrl = await ref.getDownloadURL();
+
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(widget.userId)
+            .update({'profilePicture': imageUrl});
+
+        setState(() {});
+      } catch (e) {
+        print("Error uploading image: $e");
+      }
+    } else {
+      print("No image selected.");
     }
   }
 
@@ -47,7 +65,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
 
-    return Scaffold(
+    return SafeArea(
+        child: Scaffold(
       appBar: AppBar(
         backgroundColor: secondaryColor,
         elevation: 0,
@@ -89,7 +108,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   color: primaryColor,
                   padding: const EdgeInsets.symmetric(vertical: 24),
                   child: GestureDetector(
-                    onTap: _pickImage,
+                    onTap: pickImage,
                     child: Column(
                       children: [
                         Container(
@@ -101,32 +120,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               : screenSize.height * 0.3,
                           margin: const EdgeInsets.only(bottom: 15),
                           decoration: BoxDecoration(
-                            color: Colors.grey,
                             borderRadius: BorderRadius.circular(100),
-                            image: userData['profilePicture'] != null
-                                ? DecorationImage(
-                                    image: NetworkImage(
-                                        userData['profilePicture']),
-                                    fit: BoxFit.cover,
-                                  )
-                                : const DecorationImage(
-                                    image: AssetImage('assets/profile.png'),
-                                    fit: BoxFit.cover,
-                                  ),
+                            image: DecorationImage(
+                              image: FileImage(File(image!.path)),
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(
-                              'Change Profile Picture',
-                              style: GoogleFonts.afacad(
-                                textStyle: const TextStyle(
-                                  color: secondaryColor,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
+                            TextButton(
+                              onPressed: pickImage,
+                              style: TextButton.styleFrom(
+                                textStyle: GoogleFonts.afacad(
+                                  textStyle: const TextStyle(
+                                    color: secondaryColor,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
                               ),
+                              child: const Text('Change Profile Picture'),
                             ),
                             const SizedBox(width: 8),
                           ],
@@ -143,12 +158,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: Column(
                     children: [
                       UserInfoTile(
-                        margin: const EdgeInsets.only(bottom: 16),
                         label: 'Email',
                         value: userData['email'] ?? 'No Email Provided',
                       ),
                       UserInfoTile(
-                        margin: const EdgeInsets.only(bottom: 16),
                         label: 'Full Name',
                         value: userData['name'] ?? 'No Name Provided',
                       ),
@@ -160,28 +173,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
           );
         },
       ),
-    );
+    ));
   }
 }
 
 class UserInfoTile extends StatelessWidget {
   final String label;
   final String value;
-  final Color? valueBackground;
-  final EdgeInsetsGeometry? margin;
 
   const UserInfoTile({
     super.key,
     required this.label,
     required this.value,
-    this.margin,
-    this.valueBackground,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: margin,
+      margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
       decoration: BoxDecoration(
         color: Colors.white,

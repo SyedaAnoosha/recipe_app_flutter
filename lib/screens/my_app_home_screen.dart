@@ -37,7 +37,8 @@ class _MyAppHomeScreenState extends State<MyAppHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return SafeArea(
+        child: Scaffold(
       backgroundColor: bgColor,
       appBar: AppBar(
         title: Text(
@@ -49,15 +50,6 @@ class _MyAppHomeScreenState extends State<MyAppHomeScreen> {
         ),
         backgroundColor: secondaryColor,
         centerTitle: true,
-        actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.notifications,
-              color: primaryColor,
-            ),
-            onPressed: () {},
-          ),
-        ],
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -231,7 +223,7 @@ class _MyAppHomeScreenState extends State<MyAppHomeScreen> {
           ),
         ),
       ),
-    );
+    ));
   }
 
   Widget _buildHorizontalRecipeList(List<DocumentSnapshot> recipes) {

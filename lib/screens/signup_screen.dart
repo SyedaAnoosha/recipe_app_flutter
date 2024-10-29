@@ -22,7 +22,8 @@ class _SignupPageState extends State<SignupPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return SafeArea(
+        child: Scaffold(
       body: Stack(
         children: <Widget>[
           Container(
@@ -171,6 +172,6 @@ class _SignupPageState extends State<SignupPage> {
           ),
         ],
       ),
-    );
+    ));
   }
 }

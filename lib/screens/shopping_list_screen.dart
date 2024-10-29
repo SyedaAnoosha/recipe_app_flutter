@@ -16,7 +16,8 @@ class ShoppingListScreen extends StatefulWidget {
 class _ShoppingListScreenState extends State<ShoppingListScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return SafeArea(
+        child: Scaffold(
       backgroundColor: bgColor,
       appBar: AppBar(
         backgroundColor: secondaryColor,
@@ -67,7 +68,7 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
         backgroundColor: secondaryColor,
         child: const Icon(Icons.add_shopping_cart, color: primaryColor),
       ),
-    );
+    ));
   }
 
   void _removeItem(Map<String, dynamic> ingredient) async {
