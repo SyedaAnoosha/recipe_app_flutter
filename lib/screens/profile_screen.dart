@@ -19,13 +19,9 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   String imageUrl = '';
-  XFile? image;
-
   Future<void> pickImage() async {
     final pickedImage =
         await ImagePicker().pickImage(source: ImageSource.gallery);
-
-    image = pickedImage;
 
     if (pickedImage != null) {
       Uint8List? imageData;
@@ -120,12 +116,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               : screenSize.height * 0.3,
                           margin: const EdgeInsets.only(bottom: 15),
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(100),
-                            image: DecorationImage(
-                              image: FileImage(File(image!.path)),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
+                              color: secondaryColor,
+                              borderRadius: BorderRadius.circular(100),
+                              image: userData['profilePicture'] != null
+                                  ? DecorationImage(
+                                      image: NetworkImage(
+                                        userData['profilePicture'],
+                                      ),
+                                      fit: BoxFit.cover,
+                                    )
+                                  : const DecorationImage(
+                                      image: AssetImage('assets/profile.png'),
+                                      fit: BoxFit.cover)),
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
