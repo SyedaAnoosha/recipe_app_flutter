@@ -19,21 +19,18 @@ class _MyAppHomeScreenState extends State<MyAppHomeScreen> {
   final CollectionReference categoriesItems =
       FirebaseFirestore.instance.collection("categories");
 
-  Query get filteredRecipes => FirebaseFirestore.instance
-      .collection("recipes")
-      .where('category', arrayContains: category);
-
   Query get allRecipes => FirebaseFirestore.instance.collection("recipes");
 
-  Query get selectedRecipes => category == "All" ? allRecipes : filteredRecipes;
+  Query get categorizedRecipes =>
+      allRecipes.where('category', arrayContains: category);
 
-  Query get featuredRecipes => FirebaseFirestore.instance
-      .collection('recipes')
-      .where('featured', isEqualTo: true);
+  Query get selectedRecipes =>
+      category == "All" ? allRecipes : categorizedRecipes;
 
-  Query get recommendedRecipes => FirebaseFirestore.instance
-      .collection('recipes')
-      .where('recommended', isEqualTo: true);
+  Query get featuredRecipes => allRecipes.where('featured', isEqualTo: true);
+
+  Query get recommendedRecipes =>
+      allRecipes.where('recommended', isEqualTo: true);
 
   @override
   Widget build(BuildContext context) {

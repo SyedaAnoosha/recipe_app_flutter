@@ -41,7 +41,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
       body: favoriteItems.isEmpty
           ? const Center(
               child: Text(
-                "No Favorites yet",
+                "No favorites yet!",
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,

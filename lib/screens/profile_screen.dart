@@ -153,19 +153,68 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
                 Container(
-                  margin: const EdgeInsets.only(top: 24),
                   padding:
                       EdgeInsets.symmetric(horizontal: screenSize.width * 0.05),
-                  width: screenSize.width,
+                  width: screenSize.width > 480
+                      ? screenSize.width / 2.1
+                      : screenSize.width,
                   child: Column(
                     children: [
-                      UserInfoTile(
-                        label: 'Email',
-                        value: userData['email'] ?? 'No Email Provided',
+                      Container(
+                        margin: const EdgeInsets.only(bottom: 16),
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 12,
+                          horizontal: 16,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.white60,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              "Email",
+                              style: TextStyle(
+                                  fontSize: 14, color: secondaryColor),
+                            ),
+                            Text(
+                              userData['email'],
+                              style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: secondaryColor),
+                            ),
+                          ],
+                        ),
                       ),
-                      UserInfoTile(
-                        label: 'Full Name',
-                        value: userData['name'] ?? 'No Name Provided',
+                      Container(
+                        margin: const EdgeInsets.only(bottom: 16),
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 12,
+                          horizontal: 16,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.white60,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              "Name",
+                              style: TextStyle(
+                                  fontSize: 14, color: secondaryColor),
+                            ),
+                            Text(
+                              userData['name'],
+                              style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: secondaryColor),
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -176,56 +225,5 @@ class _ProfileScreenState extends State<ProfileScreen> {
         },
       ),
     ));
-  }
-}
-
-class UserInfoTile extends StatelessWidget {
-  final String label;
-  final String value;
-
-  const UserInfoTile({
-    super.key,
-    required this.label,
-    required this.value,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            spreadRadius: 2,
-            blurRadius: 5,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            label,
-            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-            decoration: BoxDecoration(
-              color: primaryColor,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Text(
-              value,
-              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-            ),
-          ),
-        ],
-      ),
-    );
   }
 }
