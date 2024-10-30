@@ -19,10 +19,9 @@ Future<void> addToShoppingList(
       .doc(userId)
       .collection('shoppingLists')
       .doc('lists');
-
-  await shoppingListRef.set({
+  await shoppingListRef.update({
     'ingredients': FieldValue.arrayUnion([
       {'item_name': itemName, 'quantity': quantity}
     ]),
-  }, SetOptions(merge: true));
+  });
 }
