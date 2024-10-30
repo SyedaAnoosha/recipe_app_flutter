@@ -56,7 +56,7 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
                 subtitle: Text("Quantity: ${ingredient['quantity']}"),
                 trailing: IconButton(
                   icon: const Icon(Icons.delete, color: secondaryColor),
-                  onPressed: () => _removeItem(ingredient),
+                  onPressed: () => removeItem(ingredient),
                 ),
               );
             },
@@ -64,14 +64,14 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _showAddItemDialog(),
+        onPressed: () => addItemDialog(),
         backgroundColor: secondaryColor,
         child: const Icon(Icons.add_shopping_cart, color: primaryColor),
       ),
     ));
   }
 
-  void _removeItem(Map<String, dynamic> ingredient) async {
+  void removeItem(Map<String, dynamic> ingredient) async {
     final shoppingListRef = FirebaseFirestore.instance
         .collection('users')
         .doc(widget.userId)
@@ -83,7 +83,7 @@ class _ShoppingListScreenState extends State<ShoppingListScreen> {
     });
   }
 
-  void _showAddItemDialog() {
+  void addItemDialog() {
     TextEditingController itemController = TextEditingController();
     TextEditingController quantityController = TextEditingController();
 
